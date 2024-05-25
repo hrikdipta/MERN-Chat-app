@@ -1,12 +1,12 @@
 import jwt from "jsonwebtoken";
-import {errorHandler} from "./errorHandler";
+import {errorHandler} from "./error.js";
 export const verifyUser = (req,res,next)=>{
     const token =req.cookies.token;
     if(!token) return res.status(401).json({error:"Access Denied"});
     try {
         jwt.verify(token,process.env.JWT_SECRET,(err,user)=>{
             if(err){
-                return next(errorHandler(401,"Unauthorized Access"));
+                return next(errorHandler(401,"Unauthorized "));
             }
             req.user=user;
             next();
