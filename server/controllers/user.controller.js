@@ -18,7 +18,8 @@ export const updateUser=async (req,res,next)=>{
             password:hashedPassword,
             profilePicture
         },{new:true});
-        return res.status(200).json(user);
+        const {password:pass,...rest}=user._doc;
+        return res.status(200).json(rest);
     } catch (error) {
         next(error);
     }

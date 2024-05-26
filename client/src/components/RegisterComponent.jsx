@@ -35,6 +35,7 @@ const RegisterComponent = () => {
                 return;
             }
             setLoading(false);
+            localStorage.setItem('user',JSON.stringify(data));
             navigate('/chat');
         } catch (error) {
             setError('Something went wrong');

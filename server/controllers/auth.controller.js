@@ -15,7 +15,8 @@ export const signup=async(req,res,next)=>{
         const hashedPassword=await bcryptjs.hash(password,10);
         const newUser=await User.create({name,email,password:hashedPassword});
         const {password:pass,...rest}=newUser._doc;
-        return res.status(201).json(rest);
+        const token=jwt.sign({id:newUser._id,email:newUser.email},process.env.JWT_SECRET);
+        return res.cookie('token',token).status(201).json(rest);
     }catch(err){
         next(err);
     }
