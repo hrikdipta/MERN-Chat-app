@@ -1,14 +1,16 @@
 import React from 'react'
-import { Outlet } from 'react-router-dom'
+import { BrowserRouter,Route, Routes } from 'react-router-dom'
 import './App.css'
 import Navbar from './components/Navbar'
+import AuthPage from './pages/AuthPage'
 
 const App = () => {
   return (
-    <>
-      <Navbar/>
-      <Outlet/>
-    </>
+    <BrowserRouter>
+      <Routes>
+        <Route path='/auth' element={<AuthPage/>}/>
+      </Routes>
+    </BrowserRouter>
   )
 }
 
