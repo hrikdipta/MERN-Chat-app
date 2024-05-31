@@ -75,16 +75,11 @@ export const addUserToGroup= async(req,res,next)=>{
         if(!chat){
             return res.status(400).json({error:"No chat is found"});
         }
-
-        if(chat.members.find(userId)){
-            return res.status(400).json({error:"user already added"});
-            console.log("hello")
-        }
         chat.members.push(...userId);
-        const newChat = await Chat.findByIdAndUpdate(chatId,chat,{new:true});
+        const newChat = await Chat.findByIdAndUpdate(chatId,chat,{new:true}).populate("members","-password")
         return res.status(200).json(newChat)
     } catch (error) {
-        
+        next(error)
     }
 }
 
