@@ -64,3 +64,39 @@ export const createGroupChat =async(req,res,next)=>{
         next(error);
     }
 }
+
+export const addUserToGroup= async(req,res,next)=>{
+    const {userId,chatId}= req.body;
+    if(!userId || !chatId|| userId.length===0){
+        return res.status(400).json({error:"userId is required"})
+    }
+    try {
+        const chat = await Chat.findById(chatId);
+        if(!chat){
+            return res.status(400).json({error:"No chat is found"});
+        }
+
+        if(chat.members.find(userId)){
+            return res.status(400).json({error:"user already added"});
+            console.log("hello")
+        }
+        chat.members.push(...userId);
+        const newChat = await Chat.findByIdAndUpdate(chatId,chat,{new:true});
+        return res.status(200).json(newChat)
+    } catch (error) {
+        
+    }
+}
+
+export const renameGroup = async(req,res,next)=>{
+    const {chatId,chatName}=req.body;
+    try {
+        const updatedChat= await Chat.findByIdAndUpdate(chatId,{chatName},{new:true}).populate("members","-password")
+        if(!updatedChat){
+            return res.status(400).json({error:"No chat found"});
+        }
+        return res.status(201).json(updatedChat);
+    } catch (error) {
+        next(error);
+    }
+}
