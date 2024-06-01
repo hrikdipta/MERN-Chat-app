@@ -95,3 +95,22 @@ export const renameGroup = async(req,res,next)=>{
         next(error);
     }
 }
+
+export const removeUserFromGroup =async (req,res,next)=>{
+    const {chatId, userId} =req.body;
+    if(!chatId || !userId){
+        return res.status(400).json({error:"chatId or UserId is required"});
+    }
+    try {
+        const chat=await Chat.findById(chatId);
+        if(!chat){
+            return res.status(400).json({error:"Chat is not found"});
+        }
+        chat.members=chat.members.filter((member)=>member.toString()!==userId)
+        console.log(chat.members)
+        const newChat= await Chat.findByIdAndUpdate(chatId,chat,{new:true}).populate("members","-password");
+        return res.status(200).json(newChat);
+    } catch (error) {
+        next(error);
+    }
+}
