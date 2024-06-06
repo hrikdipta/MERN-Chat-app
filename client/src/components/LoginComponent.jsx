@@ -7,8 +7,11 @@ import {
   Spinner
 } from "@material-tailwind/react";
 import {useNavigate} from 'react-router-dom';
+import { useSelector,useDispatch } from 'react-redux';
+import {signInSuccess} from '../redux/User/userSlice'
 const LoginComponent = () => {
   const navigate=useNavigate();
+  const dispatch=useDispatch();
   const [formData,setFormData]=useState({email:'',password:''});
   const [error,setError]=useState(null);
   const [loading,setLoading]=useState(false);
@@ -35,7 +38,7 @@ const LoginComponent = () => {
         return;
       }
       setLoading(false);
-      localStorage.setItem('user',JSON.stringify(data));
+      dispatch(signInSuccess(data))
       navigate('/chat');
     } catch (error) {
       setError('Something went wrong');
