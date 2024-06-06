@@ -18,8 +18,9 @@ export const createChat =async(req,res,next)=>{
         if(isChatExist.length>0){
             return res.status(200).json(isChatExist[0]);
         }else{
+            const user = await User.findById(userId);
             const newChat =await Chat.create({
-                chatName:"sender",
+                chatName:user.name,
                 members:[userId,req.user.id]
             })
             const chat =await Chat.findById(newChat._id).populate("members","-password").populate("lastMessage");
