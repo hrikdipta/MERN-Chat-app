@@ -70,7 +70,7 @@ function NavbarComponent() {
     }
   }
   return (
-    <div>
+    <div className=''>
       <Navbar fluid rounded className='py-3 border-b-2 px-3 md:px-6'>
           <TextInput className='md:block hidden' id="search" type="text" required placeholder='search' icon={HiSearch}  autoComplete='off' onClick={()=>{setdrawer(true)}}/>
           <HiSearch className='md:hidden text-gray-600 text-2xl'/>

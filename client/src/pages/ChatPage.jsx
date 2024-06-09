@@ -8,9 +8,9 @@ function ChatPage() {
     const {currentUser} = useSelector((state)=>state.user)
   return (
     currentUser ? 
-    <div className=' min-h-screen'>
+    <div className='h-screen flex flex-col '>
         <NavbarComponent/>
-        <div className='flex flex-row px-3 md:px-6 py-3'>
+        <div className='flex flex-1 overflow-hidden'>
             <ChatSidebar/>
             <ChatBox/>
         </div>

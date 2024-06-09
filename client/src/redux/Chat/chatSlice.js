@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, current } from '@reduxjs/toolkit'
 
 const initialState ={
     Chats:[],
@@ -16,7 +16,8 @@ export const chatSlice =createSlice({
             state.currentChat=action.payload
         },
         addChat:(state,action)=>{
-            state.Chats.push(action.payload)
+            state.Chats=[action.payload,...state.Chats];
+            state.currentChat=action.payload;
         }
     }
 })
