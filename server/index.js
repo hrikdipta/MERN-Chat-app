@@ -5,6 +5,7 @@ import cookieParser from 'cookie-parser';
 import authRoute from './routes/auth.route.js'
 import userRoute from './routes/user.route.js'
 import chatRoute from './routes/chat.route.js'
+import messageRoute from './routes/message.route.js'
 const app = express();
 dotenv.config();
 
@@ -21,6 +22,7 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
 app.use('/api/auth', authRoute);
 app.use('/api/user',userRoute)
 app.use('/api/chat',chatRoute)
+app.use('/api/message',messageRoute);
 
 //error handler
 app.use((err,req,res,next)=>{
