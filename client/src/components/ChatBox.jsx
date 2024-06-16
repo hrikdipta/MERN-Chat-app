@@ -37,12 +37,10 @@ const ChatBox = () => {
         setError(data.message);
       }
       setMessages([...messages,data]);
-      console.log(messages)
     } catch (error) {
       setError(error.message);
     }
   }
-  console.log(messages);
   const fetchMessages = async ()=>{
     if(!currentChat) return;
     try {
