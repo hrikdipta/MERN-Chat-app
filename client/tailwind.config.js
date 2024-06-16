@@ -14,5 +14,14 @@ module.exports = withMT({
   },
   plugins: [
     flowbite.plugin(),
+    function({addUtilities}) {
+      addUtilities({
+        '.hide-scrollbar': {
+          '::-webkit-scrollbar': { display: 'none' },
+          '-ms-overflow-style': 'none',
+          'scrollbar-width': 'none',
+        }
+      })
+    },
   ],
 });
