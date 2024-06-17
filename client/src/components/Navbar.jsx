@@ -5,6 +5,7 @@ import { Link,useNavigate } from 'react-router-dom';
 import {useSelector,useDispatch} from 'react-redux'
 import UserListItem from './UserListItem';
 import {addChat} from '../redux/Chat/chatSlice'
+import Notification from './Notification';
 function NavbarComponent() {
   const{currentUser}=useSelector((state)=>state.user)
   const dispatch=useDispatch();
@@ -75,7 +76,10 @@ function NavbarComponent() {
           <TextInput className='md:block hidden' id="search" type="text" required placeholder='search' icon={HiSearch}  autoComplete='off' onClick={()=>{setdrawer(true)}}/>
           <HiSearch className='md:hidden text-gray-600 text-2xl'/>
           <h1 className='text-3xl font-bold  self-center'>ChatNexus</h1>
-        <Dropdown 
+          
+        <div className='flex items-center gap-4'>
+          <Notification/>
+          <Dropdown 
         inline
         label={
           <Avatar id='dropdown' img={currentUser && currentUser.profilePicture} alt="avatar" rounded  />
@@ -89,6 +93,8 @@ function NavbarComponent() {
           <Dropdown.Divider />
           <Dropdown.Item>Sign out</Dropdown.Item>
         </Dropdown>
+        </div>
+        
       </Navbar>
       <Drawer open={drawer} onClose={handleClose}>
         <Drawer.Header title="Search Users" />
