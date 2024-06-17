@@ -6,8 +6,36 @@ import authRoute from './routes/auth.route.js'
 import userRoute from './routes/user.route.js'
 import chatRoute from './routes/chat.route.js'
 import messageRoute from './routes/message.route.js'
+import http from 'http';
+import {Server} from 'socket.io';
 const app = express();
+const server = http.createServer(app);
 dotenv.config();
+
+const io = new Server(server ,{
+    cors: {
+        origin : 'http://localhost:5173',
+        methods: ['GET','POST']
+    }
+})
+
+io.on('connection',(socket)=>{
+    console.log('a user connected');
+    socket.on('setup',(userData)=>{
+        socket.join(userData._id);
+        console.log('user joined',userData._id)
+    })
+    socket.on('message',(message,chat,sender)=>{
+        chat.members.forEach((member)=>{
+            if(member._id.toString() !== sender._id.toString()){
+                io.to(member._id).emit('message',message);
+            }
+        })
+    })
+    socket.on('disconnect',()=>{
+        console.log('user disconnected');
+    })
+})
 
 //middlewares
 app.use(express.json());
@@ -37,6 +65,6 @@ app.use((err,req,res,next)=>{
 
 //listen to server
 const PORT = process.env.PORT||3000 ;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log('Server is running on ', PORT);
 });

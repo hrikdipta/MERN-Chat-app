@@ -6,6 +6,7 @@ import {Spinner,TextInput,Button} from 'flowbite-react'
 import { IoMdSend } from "react-icons/io";
 import { FiPlus } from "react-icons/fi";
 import MessageBubble from './MessageBubble.jsx'
+import {io} from 'socket.io-client'
 const ChatBox = () => {
   const {currentChat} = useSelector(state=>state.chat)
   const {currentUser} = useSelector(state=>state.user)
@@ -13,12 +14,36 @@ const ChatBox = () => {
   const [newMessage, setNewMessage] = useState('');
   const [error,setError]=useState(null);
   const [messages,setMessages]= useState([]);
+  const [socket,setSocket]=useState(null);
+  const ENDPOINT = 'http://localhost:3000';
+  
+  useEffect(()=>{
+    const newSocket = io(ENDPOINT);
+    setSocket(newSocket);
+  },[])
+  useEffect(()=>{
+    if(socket){
+      socket.emit('setup',currentUser);
+      console.log('socket setup')
+    }
+  },[socket,currentUser])
+  useEffect(()=>{
+    if(socket){
+      socket.on('message',(message)=>{
+        if(message.chatId._id.toString() === currentChat?._id.toString()){
+          setMessages([...messages,message])
+          console.log('message received');
+        }
+      })
+    }
+  })
   const handleTypeing = (e) => {
     setNewMessage(e.target.value)
   }
   const sendMessage =async (e)=>{
     e.preventDefault();
-    setNewMessage("");
+    if(newMessage.trim()=== '') 
+      return;
     try {
       const res= await fetch('/api/message',{
         method: 'POST',
@@ -33,10 +58,12 @@ const ChatBox = () => {
         })
       })
       const data = await res.json();
+      setNewMessage('');
       if(!res.ok){
         setError(data.message);
       }
       setMessages([...messages,data]);
+      socket.emit('message',data,currentChat,currentUser);
     } catch (error) {
       setError(error.message);
     }
@@ -52,16 +79,16 @@ const ChatBox = () => {
         return setError(data.message);
       }
       setMessages(data);
+      socket.emit('join chat',currentChat);
     } catch (error) {
       setError(error.message);
     }
   }
-
   useEffect(()=>{
-    if(currentChat){
+    if(currentChat && socket){
       fetchMessages();
     }
-  },[currentChat])
+  },[currentChat,socket])
   return (
     <div className={`flex-1  my-3 p-3 rounded-md  border-2 ${currentChat ? 'flex flex-col' : 'hidden'} md:flex md:flex-col`}>
       {

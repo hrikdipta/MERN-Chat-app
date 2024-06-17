@@ -69,7 +69,6 @@ function NavbarComponent() {
       setError(error);
     }
   }
-  console.log(currentUser)
   return (
     <div className=''>
       <Navbar fluid rounded className='py-3 border-b-2 px-3 md:px-6'>
