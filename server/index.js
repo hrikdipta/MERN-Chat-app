@@ -8,13 +8,20 @@ import chatRoute from './routes/chat.route.js'
 import messageRoute from './routes/message.route.js'
 import http from 'http';
 import {Server} from 'socket.io';
+import path from 'path';
 const app = express();
 const server = http.createServer(app);
 dotenv.config();
-
+const __dirname = path.resolve();
 const io = new Server(server ,{
     cors: {
-        origin : 'http://localhost:5173',
+        origin : function(origin,callback){
+            if(!origin || process.env.ALLOWED_ORIGIN.split(',').indexOf(origin) !== -1){
+                callback(null,true);
+            }else{
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
         methods: ['GET','POST']
     }
 })
@@ -46,11 +53,20 @@ mongoose.connect(process.env.MONGODB_URI).then(() => {
 });
 
 
+
 //routes
 app.use('/api/auth', authRoute);
 app.use('/api/user',userRoute)
 app.use('/api/chat',chatRoute)
 app.use('/api/message',messageRoute);
+
+app.use(express.static(path.join(__dirname,'/client/dist')));
+
+app.get('*',(req,res)=>{
+    res.sendFile(path.join(__dirname,'client','dist','index.html'));
+})
+
+
 
 //error handler
 app.use((err,req,res,next)=>{

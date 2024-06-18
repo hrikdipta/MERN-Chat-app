@@ -15,8 +15,7 @@ const ChatBox = () => {
   const [error,setError]=useState(null);
   const [messages,setMessages]= useState([]);
   const [socket,setSocket]=useState(null);
-  const ENDPOINT = 'http://localhost:3000';
-  
+  const ENDPOINT = import.meta.env.VITE_API_URL;
   useEffect(()=>{
     const newSocket = io(ENDPOINT);
     setSocket(newSocket);
@@ -24,15 +23,13 @@ const ChatBox = () => {
   useEffect(()=>{
     if(socket){
       socket.emit('setup',currentUser);
-      console.log('socket setup')
     }
   },[socket,currentUser])
   useEffect(()=>{
     if(socket){
       socket.on('message',(message)=>{
         if(message.chatId._id.toString() === currentChat?._id.toString()){
-          setMessages([...messages,message])
-          console.log('message received');
+          setMessages([...messages,message]);
         }
       })
     }
