@@ -48,7 +48,7 @@ io.on('connection',(socket)=>{
 app.use(express.json());
 app.use(cookieParser());
 //connect to database
-mongoose.connect(process.env.MONGODB_URI).then(() => {
+mongoose.connect(process.env.MongoDB_URI).then(() => {
     console.log('MongoDB connected');
 });
 
